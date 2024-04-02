@@ -1,6 +1,9 @@
 package com.cherry.spring_school.controller;
+import com.cherry.spring_school.model.Contact;
+import com.cherry.spring_school.service.ContactService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,6 +15,13 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class ContactController {
 
     private static Logger log = LoggerFactory.getLogger(ContactController.class);
+
+    private final ContactService contactService;
+
+    @Autowired
+    public ContactController(ContactService contactService) {
+        this.contactService = contactService;
+    }
     @RequestMapping("/contact")
     public String displayContactPage() {
         return "contact.html";
@@ -31,6 +41,9 @@ public class ContactController {
 //            log.info("Message: " + message);
 //            return new ModelAndView("redirect:/contact");
 //    }
-
-
+    @RequestMapping(value = "/saveMsg", method = POST)
+    public ModelAndView saveMessage(Contact contact) {
+        contactService.saveMessageDetails(contact);
+        return new ModelAndView("redirect:/contact");
+    }
 }
